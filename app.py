@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import io
+
 
 # Set page layout to wide
 st.set_page_config(page_title="A350 Reserve Modeler", layout="wide")
@@ -190,3 +192,20 @@ except Exception as e:
 st.subheader("📥 Export Data")
 csv = df.to_csv(index=False).encode('utf-8')
 st.download_button(label="Download 144-Month Timeline as CSV", data=csv, file_name='A350_Reserve_Forecast.csv', mime='text/csv')
+st.markdown("---")
+st.subheader("📥 Export Data to Excel")
+
+# Create an in-memory buffer to build the Excel file
+buffer = io.BytesIO()
+
+# Write the dataframe to the buffer using pandas ExcelWriter
+with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+    df.to_excel(writer, index=False, sheet_name='144-Month Timeline')
+
+# Create the download button
+st.download_button(
+    label="Download 144-Month Timeline (.xlsx)",
+    data=buffer.getvalue(),
+    file_name="A350_Reserve_Forecast.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
