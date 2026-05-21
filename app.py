@@ -186,3 +186,7 @@ try:
     }), use_container_width=True, height=600)
 except Exception as e:
     st.dataframe(df, use_container_width=True, height=600)
+    st.divider()
+st.subheader("📥 Export Data")
+csv = df.to_csv(index=False).encode('utf-8')
+st.download_button(label="Download 144-Month Timeline as CSV", data=csv, file_name='A350_Reserve_Forecast.csv', mime='text/csv')
